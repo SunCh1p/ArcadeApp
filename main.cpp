@@ -1,14 +1,9 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include "color.h"
 
 const int SCREEN_WIDTH = 224, SCREEN_HEIGHT = 288;
 using namespace std;
-
-//function to put a pixel of a certain color at a certain location on surface
-void SetPixel(SDL_Surface* noptrWindowSurface, uint32_t color, int x, int y);
-
-//Will get index index at r and c
-size_t GetIndex(SDL_Surface* noptrSurface, int r, int c);
 
 int main(int argc, char* argv[]){
     //initialize sdl video
@@ -32,10 +27,10 @@ int main(int argc, char* argv[]){
 
     std::cout << "The window pixel format is: " << SDL_GetPixelFormatName(pixelFormat->format);
 
-    uint32_t color = 0xFF0000;
+    Color::InitColorFormat(pixelFormat);
 
     //draw on the screen
-    SetPixel(noptrWindowSurface, color, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+    //SetPixel(noptrWindowSurface, Color::Blue().GetPixelColor(), SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
     //display whats drawn on the surface;
     SDL_UpdateWindowSurface(optrWindow);
@@ -55,25 +50,4 @@ int main(int argc, char* argv[]){
     SDL_DestroyWindow(optrWindow);
     SDL_Quit();
     return 0;
-}
-
-//function to put a pixel of a certain color at a certain location on surface
-void SetPixel(SDL_Surface* noptrWindowSurface, uint32_t color, int x, int y){
-    //create exclusive access to surface (Good for multithreading)
-    SDL_LockSurface(noptrWindowSurface);
-
-    //Get direction all the pixels we need using pointer(noptrWindowSurface is 1d array of all the pixels)
-    uint32_t * pixels = (uint32_t*)noptrWindowSurface->pixels;
-    //y is row, x is column
-    size_t index = GetIndex(noptrWindowSurface, y, x);
-
-    pixels[index] = color;
-
-    SDL_UnlockSurface(noptrWindowSurface);
-}
-
-//Will get index index at r and c
-size_t GetIndex(SDL_Surface* noptrSurface, int r, int c){
-    //convert 1d array to 2d array
-    return r * noptrSurface->w + c;
 }
