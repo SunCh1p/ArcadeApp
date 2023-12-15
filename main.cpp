@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include "color.h"
+#include "ScreenBuffer.h"
 
 const int SCREEN_WIDTH = 224, SCREEN_HEIGHT = 288;
 using namespace std;
@@ -21,16 +22,16 @@ int main(int argc, char* argv[]){
     //create SDL surface - 2D array of pixels
     SDL_Surface* noptrWindowSurface =SDL_GetWindowSurface(optrWindow);
 
+
     //pixel formats are how the system interprets values we give it.
     //pixel format may vary depending on system
     SDL_PixelFormat* pixelFormat = noptrWindowSurface->format;
-
-    std::cout << "The window pixel format is: " << SDL_GetPixelFormatName(pixelFormat->format);
-
     Color::InitColorFormat(pixelFormat);
+    ScreenBuffer screenBuffer;
+    screenBuffer.Init(pixelFormat->format, noptrWindowSurface->w, noptrWindowSurface->h);
+    screenBuffer.SetPixel(Color::Blue(), SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+    SDL_BlitSurface(screenBuffer.GetSurface(), nullptr, noptrWindowSurface, nullptr);
 
-    //draw on the screen
-    //SetPixel(noptrWindowSurface, Color::Blue().GetPixelColor(), SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 
     //display whats drawn on the surface;
     SDL_UpdateWindowSurface(optrWindow);

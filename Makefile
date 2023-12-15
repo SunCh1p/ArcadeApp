@@ -1,35 +1,36 @@
-.PHONY: build clean run git
+.PHONY: build clean run git all
 
 CXX := g++
 CXXFLAGS := -I src/include -L src/lib -I src/Graphics
 LIBS := -lmingw32 -lSDL2main -lSDL2
 
 build: program
-	@echo "entering main"
+	@echo ---BUILDING PROGRAM---
 
 program: obj/main.o obj/color.o obj/ScreenBuffer.o
-	@echo "linking"
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
+	@$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 
 obj/ScreenBuffer.o: src/Graphics/ScreenBuffer.cpp
-	@echo "Creating color object file"
-	$(CXX) $(CXXFLAGS) -c -o $@ $^
+	@$(CXX) $(CXXFLAGS) -c -o $@ $^
 
 obj/color.o: src/Graphics/color.cpp
-	@echo "Creating color object file"
-	$(CXX) $(CXXFLAGS) -c -o $@ $^
+	@$(CXX) $(CXXFLAGS) -c -o $@ $^
 
 
 obj/main.o: main.cpp
-	@echo "creating object files..."
-	$(CXX) $(CXXFLAGS) -c -o $@ $^
+	@$(CXX) $(CXXFLAGS) -c -o $@ $^
+
+all: build run clean
 
 clean: 
-	del /Q obj\*.o
-	del /Q *.exe
+	@echo ---Cleaning .o and .exe files---
+	@del /Q obj\*.o
+	@del /Q *.exe
 
 run:
-	./program
+	@echo ---RUNNING PROGRAM---
+	@./program
+	@echo ---PROGRAM TERMINATED---
 
 git:
 	git add *

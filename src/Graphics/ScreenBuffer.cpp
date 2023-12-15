@@ -1,6 +1,7 @@
 #include "ScreenBuffer.h"
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <cassert>
 
 ScreenBuffer::ScreenBuffer(): mSurface(nullptr){}
 ScreenBuffer::ScreenBuffer(const ScreenBuffer& screenBuffer){
@@ -30,32 +31,37 @@ ScreenBuffer& ScreenBuffer::operator=(const ScreenBuffer& screenBuffer){
     return *this;
 }
 
-void ScreenBuffer::Init(uint32_t format, uint32_t width, uint32_t h){
-
+void ScreenBuffer::Init(uint32_t format, uint32_t width, uint32_t height){
+    mSurface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 0, format);
+    Clear();
 }
     
 
 void ScreenBuffer::Clear(const Color& c){
-
+    assert(mSurface);
+    if(mSurface){
+        SDL_FillRect(mSurface, nullptr, c.GetPixelColor());
+    }
 }
 
 //function to put a pixel of a certain color at a certain location on surface
 void ScreenBuffer::SetPixel(const Color& color, int x, int y){
-    //create exclusive access to surface (Good for multithreading)
-    SDL_LockSurface(mSurface);
-
-    //Get direction all the pixels we need using pointer(noptrWindowSurface is 1d array of all the pixels)
-    uint32_t * pixels = (uint32_t*)mSurface->pixels;
-    //y is row, x is column
-    size_t index = GetIndex(y, x);
-
-    pixels[index] = color.GetPixelColor();
-
-    SDL_UnlockSurface(mSurface);
+    assert(mSurface);
+    if(mSurface && y < mSurface->h && y >= 0 && x >= 0 && x < mSurface->w){
+        SDL_LockSurface(mSurface);
+        uint32_t * pixels = (uint32_t*)mSurface->pixels;
+        size_t index = GetIndex(y, x);
+        pixels[index] = color.GetPixelColor();
+        SDL_UnlockSurface(mSurface);
+    }
 }
 
 //Will get index index at r and c
 uint32_t ScreenBuffer::GetIndex(int r, int c){
     //convert 1d array to 2d array
-    return r * mSurface->w + c;
+    assert(mSurface);
+    if(mSurface){
+        return r * mSurface->w + c;
+    }
+    return 0;
 }
