@@ -7,10 +7,17 @@ SRCDIRS:= . src src/Graphics src/utils src/Shapes
 SRC:= $(wildcard *.cpp $(addsuffix /*.cpp, $(SRCDIRS)))
 OBJ:= $(patsubst %.cpp, obj/%.o, $(notdir $(SRC)))
 
+
+all: build run clean
+
 build: program
 	@echo ---Program Compiled: type './$(<)' or 'make run' to run---
 
-#linking files for main program
+run:
+	@echo ---RUNNING PROGRAM---
+	@./program
+	@echo ---PROGRAM TERMINATED---
+
 program: $(OBJ)
 	@echo "Linking $^"
 	@$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
@@ -35,18 +42,10 @@ obj/%.o: src/Shapes/%.cpp
 	@echo "Compiling $<"
 	@$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-
-all: build run clean
-
 clean: 
 	@echo ---Cleaning .o and .exe files---
 	@del /Q obj\*.o
 	@del /Q *.exe
-
-run:
-	@echo ---RUNNING PROGRAM---
-	@./program
-	@echo ---PROGRAM TERMINATED---
 
 git:
 	git add *

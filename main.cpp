@@ -3,6 +3,7 @@
 #include "color.h"
 #include "Screen.h"
 #include "Line2D.h"
+#include "Star2D.h"
 
 const int SCREEN_WIDTH = 224, SCREEN_HEIGHT = 288;
 const int MAGNIFICATION = 3;
@@ -11,8 +12,8 @@ using namespace std;
 int main(int argc, char* argv[]){
     Screen theScreen;
     theScreen.Init(SCREEN_WIDTH, SCREEN_HEIGHT, 2);
-    Line2D line = {Vec2D(0,0), Vec2D(SCREEN_WIDTH, SCREEN_HEIGHT)};
-    theScreen.Draw(line, Color::White());
+    Star2D star(Vec2D(100,100), 60);
+    theScreen.Draw(star, Color::White());
     theScreen.SwapScreen();
 
 
@@ -26,6 +27,9 @@ int main(int argc, char* argv[]){
                 break;
             }
         }
+        theScreen.Draw(star, Color::White());
+        theScreen.SwapScreen();
+        star.Rotate(-0.0001);
     }
 
     return 0;

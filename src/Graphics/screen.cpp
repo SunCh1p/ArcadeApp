@@ -1,6 +1,7 @@
 #include "screen.h"
 #include "Vec2D.h"
 #include "Line2D.h"
+#include "Star2D.h"
 #include <cmath>
 #include <SDL2/SDL.h>
 #include <cassert>
@@ -100,6 +101,24 @@ void Screen::Draw(const Line2D& line, const Color& color){
             }
         }
     }
+}
+
+void Screen::Draw(const Star2D& star, const Color& color){
+    if(star.GetDiameter() == 0){
+        return;
+    }
+    Line2D line1(star.GetP1(), star.GetP3());
+    Line2D line2(star.GetP3(), star.GetP5());
+    Line2D line3(star.GetP5(), star.GetP2());
+    Line2D line4(star.GetP2(), star.GetP4());
+    Line2D line5(star.GetP4(), star.GetP1());
+    Draw(star.GetCenter(), Color::Red());
+    Draw(line1, Color::White());
+    Draw(line2, Color::White());
+    Draw(line3, Color::White());
+    Draw(line4, Color::White());
+    Draw(line5, Color::White());
+
 }
 
 void Screen::ClearScreen(){
